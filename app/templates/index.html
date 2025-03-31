@@ -1,2 +1,20 @@
-<h1>Welcome to PDF Tools</h1>
-<a href="/compress">Compress PDF</a> | <a href="/merge">Merge PDFs</a>
+{% extends "layout.html" %}
+{% block title %}Home | CarbonPDF{% endblock %}
+{% block content %}
+<div class="text-center space-y-6 mt-10">
+  <h1 class="text-3xl font-bold text-gray-800">Welcome to CarbonPDF</h1>
+  <p class="text-gray-600">Free and easy PDF tools, no signup required.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+    <a href="/compress" class="block bg-white rounded-2xl shadow-md p-6 hover:bg-blue-50 transition">
+      <h2 class="text-xl font-semibold text-blue-600">📉 Compress PDF</h2>
+      <p class="text-sm text-gray-600 mt-2">Reduce file size while keeping quality.</p>
+    </a>
+
+    <a href="/merge" class="block bg-white rounded-2xl shadow-md p-6 hover:bg-blue-50 transition">
+      <h2 class="text-xl font-semibold text-blue-600">📎 Merge PDFs</h2>
+      <p class="text-sm text-gray-600 mt-2">Combine multiple PDFs into one.</p>
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,5 +1,78 @@
-<h1>Compress PDF</h1>
-<form method="POST" enctype="multipart/form-data">
-  <input type="file" name="file" required>
-  <button type="submit">Compress</button>
-</form>
+<!-- compress.html -->
+{% extends "layout.html" %}
+{% block title %}Compress PDF | CarbonPDF{% endblock %}
+{% block content %}
+<div class="bg-white rounded-2xl shadow-md p-6 mt-10">
+  <h1 class="text-2xl font-bold text-blue-600 mb-4">Compress PDF</h1>
+  <form method="POST" enctype="multipart/form-data" onsubmit="startProgress()" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Select PDF to Compress</label>
+      <input type="file" name="file" required class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+    </div>
+
+    <div>
+      <label for="compression" class="block text-sm font-medium text-gray-700">Compression Strength</label>
+      <small class="text-gray-500">5 = Smallest file, 1 = Best quality</small>
+      <div class="flex items-center space-x-3 mt-2">
+        <input type="range" id="compression" name="compression" min="1" max="5" value="3" oninput="updateLabel(this.value)" class="w-full">
+        <span id="compressionLabel" class="text-sm font-mono">/ebook</span>
+      </div>
+    </div>
+
+    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md">Compress PDF</button>
+  </form>
+
+  <div id="compressionSummary" class="mt-6 text-sm text-gray-700">
+    {% if compression_percent %}
+    <h3 class="text-lg font-semibold text-green-600 mb-2">Compression Summary:</h3>
+    <ul class="list-disc pl-5">
+      <li>Original size: {{ original_size }} KB</li>
+      <li>Compressed size: {{ compressed_size }} KB</li>
+      <li>Reduced by: {{ compression_percent|round(1) }}%</li>
+    </ul>
+    {% endif %}
+  </div>
+
+  <div id="loadingMessage" class="text-blue-600 mt-6" style="display: none;">
+
+    <p>Compressing PDF... Please wait</p>
+  </div>
+</div>
+
+{% if download_link %}
+<script>
+  window.onload = function () {
+    const link = document.createElement("a");
+    link.href = "{{ download_link }}";
+    link.download = "";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+</script>
+{% endif %}
+
+<script>
+  document.querySelector('input[name="file"]').addEventListener('change', function () {
+    const summary = document.getElementById("compressionSummary");
+    if (summary) summary.innerHTML = "";
+    const loading = document.getElementById("loadingMessage");
+    if (loading) loading.style.display = "none";
+  });
+
+  function updateLabel(val) {
+    const labels = {
+      5: "/screen",
+      4: "/ebook",
+      3: "/printer",
+      2: "/prepress",
+      1: "/default"
+    };
+    document.getElementById("compressionLabel").innerText = labels[val];
+  }
+
+  function startProgress() {
+    document.getElementById("loadingMessage").style.display = "block";
+  }
+</script>
+{% endblock %}
