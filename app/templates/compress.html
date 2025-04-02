@@ -1,31 +1,50 @@
-<!-- compress.html -->
 {% extends "layout.html" %}
 {% block title %}Compress PDF | CarbonPDF{% endblock %}
 {% block content %}
-<div class="bg-white rounded-2xl shadow-md p-6 mt-10">
-  <h1 class="text-2xl font-bold text-blue-600 mb-4">Compress PDF</h1>
-  <form method="POST" enctype="multipart/form-data" onsubmit="startProgress()" class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Select PDF to Compress</label>
-      <input type="file" name="file" required class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
-    </div>
-
-    <div>
-      <label for="compression" class="block text-sm font-medium text-gray-700">Compression Strength</label>
-      <small class="text-gray-500">5 = Smallest file, 1 = Best quality</small>
-      <div class="flex items-center space-x-3 mt-2">
-        <input type="range" id="compression" name="compression" min="1" max="5" value="3" oninput="updateLabel(this.value)" class="w-full">
-        <span id="compressionLabel" class="text-sm font-mono">/ebook</span>
+<div style="max-width: 800px; margin: 40px auto; padding: 24px; background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <h1 style="font-size: 1.8rem; font-weight: bold; color: #3182ce; margin-bottom: 16px;">Compress PDF</h1>
+  
+  <!-- File size limit notice -->
+  <div style="background-color: #ebf8ff; border-left: 4px solid #3182ce; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+    <p style="margin: 0; color: #2c5282; font-size: 0.9rem;">
+      <strong>Note:</strong> Maximum file size is 10 MB. For larger files, please try our desktop application.
+    </p>
+  </div>
+  
+  <!-- Error message from server -->
+  {% if error %}
+  <div style="background-color: #fff5f5; border-left: 4px solid #e53e3e; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+    <p style="margin: 0; color: #c53030; font-size: 0.9rem;">
+      <strong>Error:</strong> {{ error }}
+    </p>
+  </div>
+  {% endif %}
+  
+  <form method="POST" enctype="multipart/form-data" onsubmit="return validateFileSize()" style="margin-top: 24px;">
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Select PDF to Compress</label>
+      <input type="file" name="file" id="pdfFile" required style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px;" accept=".pdf" />
+      <div id="fileSizeError" style="color: #e53e3e; font-size: 0.8rem; margin-top: 6px; display: none;">
+        File size exceeds the maximum limit of 10 MB. Please select a smaller file.
       </div>
     </div>
 
-    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md">Compress PDF</button>
+    <div style="margin-bottom: 24px;">
+      <label for="compression" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 4px;">Compression Strength</label>
+      <small style="display: block; color: #718096; margin-bottom: 8px;">5 = Smallest file, 1 = Best quality</small>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <input type="range" id="compression" name="compression" min="1" max="5" value="3" oninput="updateLabel(this.value)" style="flex-grow: 1;" />
+        <span id="compressionLabel" style="font-family: monospace; font-size: 0.9rem;">/ebook</span>
+      </div>
+    </div>
+
+    <button type="submit" id="submitButton" style="width: 100%; background-color: #3182ce; color: white; font-weight: 500; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">Compress PDF</button>
   </form>
 
-  <div id="compressionSummary" class="mt-6 text-sm text-gray-700">
+  <div id="compressionSummary" style="margin-top: 24px; font-size: 0.9rem; color: #4a5568;">
     {% if compression_percent %}
-    <h3 class="text-lg font-semibold text-green-600 mb-2">Compression Summary:</h3>
-    <ul class="list-disc pl-5">
+    <h3 style="font-size: 1.2rem; font-weight: 600; color: #38a169; margin-bottom: 8px;">Compression Summary:</h3>
+    <ul style="list-style-type: disc; padding-left: 20px;">
       <li>Original size: {{ original_size }} KB</li>
       <li>Compressed size: {{ compressed_size }} KB</li>
       <li>Reduced by: {{ compression_percent|round(1) }}%</li>
@@ -33,8 +52,7 @@
     {% endif %}
   </div>
 
-  <div id="loadingMessage" class="text-blue-600 mt-6" style="display: none;">
-
+  <div id="loadingMessage" style="color: #3182ce; margin-top: 24px; display: none;">
     <p>Compressing PDF... Please wait</p>
   </div>
 </div>
@@ -53,11 +71,30 @@
 {% endif %}
 
 <script>
+  // File size validation function
+  function validateFileSize() {
+    const fileInput = document.getElementById('pdfFile');
+    const file = fileInput.files[0];
+    const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+    
+    if (file && file.size > maxSizeBytes) {
+      document.getElementById('fileSizeError').style.display = 'block';
+      return false; // Prevent form submission
+    } else {
+      document.getElementById('fileSizeError').style.display = 'none';
+      startProgress();
+      return true; // Allow form submission
+    }
+  }
+
   document.querySelector('input[name="file"]').addEventListener('change', function () {
     const summary = document.getElementById("compressionSummary");
     if (summary) summary.innerHTML = "";
     const loading = document.getElementById("loadingMessage");
     if (loading) loading.style.display = "none";
+    
+    // Check file size when file is selected
+    validateFileSize();
   });
 
   function updateLabel(val) {

@@ -1,20 +1,41 @@
 {% extends "layout.html" %}
 {% block title %}Home | CarbonPDF{% endblock %}
 {% block content %}
-<div class="text-center space-y-6 mt-10">
-  <h1 class="text-3xl font-bold text-gray-800">Welcome to CarbonPDF</h1>
-  <p class="text-gray-600">Free and easy PDF tools, no signup required.</p>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-    <a href="/compress" class="block bg-white rounded-2xl shadow-md p-6 hover:bg-blue-50 transition">
-      <h2 class="text-xl font-semibold text-blue-600">📉 Compress PDF</h2>
-      <p class="text-sm text-gray-600 mt-2">Reduce file size while keeping quality.</p>
+<div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center;">
+  <h1 style="font-size: 2.5rem; font-weight: bold; color: #1a202c; margin-bottom: 16px;">CarbonPDF</h1>
+  <p style="font-size: 1.2rem; color: #4a5568; margin-bottom: 32px;">Free and easy PDF tools, no signup required.</p>
+  
+  <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin: 48px 0; text-align: left;">
+    <a href="/compress" style="display: block; background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-decoration: none;">
+      <h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 12px;">Compress PDF</h2>
+      <p style="color: #4a5568;">Reduce file size while maintaining quality for easier sharing.</p>
     </a>
 
-    <a href="/merge" class="block bg-white rounded-2xl shadow-md p-6 hover:bg-blue-50 transition">
-      <h2 class="text-xl font-semibold text-blue-600">📎 Merge PDFs</h2>
-      <p class="text-sm text-gray-600 mt-2">Combine multiple PDFs into one.</p>
+    <a href="/merge" style="display: block; background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 24px; text-decoration: none;">
+      <h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 12px;">Merge PDFs</h2>
+      <p style="color: #4a5568;">Combine multiple PDF files into a single document.</p>
     </a>
+  </div>
+  
+  <div style="margin-top: 64px; padding-top: 32px; border-top: 1px solid #e2e8f0;">
+    <h2 style="font-size: 1.8rem; font-weight: 600; color: #1a202c; margin-bottom: 32px;">Why Choose CarbonPDF?</h2>
+    
+    <div style="display: grid; grid-template-columns: 1fr; gap: 32px; text-align: center;">
+      <div>
+        <h3 style="font-size: 1.2rem; font-weight: 500; color: #1a202c; margin-bottom: 8px;">Secure</h3>
+        <p style="color: #4a5568;">Files processed securely and automatically deleted.</p>
+      </div>
+      
+      <div style="margin-top: 24px;">
+        <h3 style="font-size: 1.2rem; font-weight: 500; color: #1a202c; margin-bottom: 8px;">Fast</h3>
+        <p style="color: #4a5568;">Get your PDFs processed quickly with optimized tools.</p>
+      </div>
+      
+      <div style="margin-top: 24px;">
+        <h3 style="font-size: 1.2rem; font-weight: 500; color: #1a202c; margin-bottom: 8px;">Free</h3>
+        <p style="color: #4a5568;">All tools are completely free with no hidden fees.</p>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -1,55 +1,107 @@
-<!-- merge.html -->
 {% extends "layout.html" %}
 {% block title %}Merge PDFs | CarbonPDF{% endblock %}
 {% block content %}
-<div class="bg-white rounded-2xl shadow-md p-6 mt-10">
-  <h1 class="text-2xl font-bold text-blue-600 mb-4">Merge PDFs</h1>
-  <form method="POST" enctype="multipart/form-data" class="space-y-4">
-    <p class="text-sm text-gray-600">Select up to 5 PDFs to merge in order:</p>
+<div style="max-width: 800px; margin: 40px auto; padding: 24px; background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <h1 style="font-size: 1.8rem; font-weight: bold; color: #3182ce; margin-bottom: 16px;">Merge PDFs</h1>
+  
+  <!-- File size limit notice -->
+  <div style="background-color: #ebf8ff; border-left: 4px solid #3182ce; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+    <p style="margin: 0; color: #2c5282; font-size: 0.9rem;">
+      <strong>Note:</strong> Maximum file size is 10 MB per file. For larger files, please try our desktop application.
+    </p>
+  </div>
+  
+  <form method="POST" enctype="multipart/form-data" onsubmit="return validateFileSizes()" style="margin-top: 24px;">
+    <p style="font-size: 0.9rem; color: #4a5568; margin-bottom: 16px;">Select up to 5 PDFs to merge in order:</p>
 
     {% for i in range(1, 6) %}
-    <div>
-      <label class="block text-sm font-medium text-gray-700">File {{ i }}:</label>
-      <input type="file" name="file{{ i }}" id="file{{ i }}" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2">
-      <small id="file{{ i }}Label" class="text-gray-500"></small>
+    <div style="margin-bottom: 16px;">
+      <label style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 4px;">File {{ i }}:</label>
+      <input type="file" name="file{{ i }}" id="pdfFile{{ i }}" accept=".pdf" style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;" />
+      <div id="fileSizeError{{ i }}" style="color: #e53e3e; font-size: 0.8rem; margin-top: 6px; display: none;">
+        File size exceeds the maximum limit of 10 MB.
+      </div>
     </div>
     {% endfor %}
 
-    <div class="flex space-x-3">
-      <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md">Merge</button>
-      <button type="button" onclick="clearForm()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-md">Clear</button>
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+      <button type="submit" id="submitButton" style="flex: 1; background-color: #3182ce; color: white; font-weight: 500; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">Merge</button>
+      <button type="button" onclick="clearForm()" style="flex: 1; background-color: #edf2f7; color: #1a202c; font-weight: 500; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">Clear</button>
     </div>
   </form>
 
-  <div id="loadingMessage" class="text-blue-600 mt-6" style="display: none;">
+  <div id="loadingMessage" style="color: #3182ce; margin-top: 24px; display: none;">
     <p>Merging PDFs... Please wait</p>
   </div>
 </div>
 
 <script>
-  for (let i = 1; i <= 5; i++) {
-    const input = document.getElementById("file" + i);
-    const label = document.getElementById("file" + i + "Label");
-
-    input.addEventListener("change", function () {
-      if (this.files.length > 0) {
-        label.innerText = "Selected: " + this.files[0].name;
+  // File size validation function for merge
+  function validateFileSizes() {
+    const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+    let allFilesValid = true;
+    let atLeastOneFileSelected = false;
+    
+    // Check each file input
+    for (let i = 1; i <= 5; i++) {
+      const fileInput = document.getElementById(`pdfFile${i}`);
+      const errorElement = document.getElementById(`fileSizeError${i}`);
+      
+      if (fileInput.files.length > 0) {
+        atLeastOneFileSelected = true;
+        const file = fileInput.files[0];
+        
+        if (file.size > maxSizeBytes) {
+          errorElement.style.display = 'block';
+          allFilesValid = false;
+        } else {
+          errorElement.style.display = 'none';
+        }
       } else {
-        label.innerText = "";
+        errorElement.style.display = 'none';
       }
-    });
+    }
+    
+    // Make sure at least one file is selected
+    if (!atLeastOneFileSelected) {
+      alert('Please select at least one PDF file to merge.');
+      return false;
+    }
+    
+    if (allFilesValid) {
+      document.getElementById('loadingMessage').style.display = 'block';
+      return true; // Allow form submission
+    } else {
+      return false; // Prevent form submission
+    }
   }
 
   function clearForm() {
+    const inputs = document.querySelectorAll('input[type="file"]');
+    inputs.forEach(input => input.value = "");
+    
+    // Clear all error messages
     for (let i = 1; i <= 5; i++) {
-      const input = document.getElementById("file" + i);
-      const label = document.getElementById("file" + i + "Label");
-      input.value = "";
-      label.innerText = "";
+      document.getElementById(`fileSizeError${i}`).style.display = 'none';
     }
 
     const loading = document.getElementById("loadingMessage");
     if (loading) loading.style.display = "none";
+  }
+  
+  // Add event listeners to check file size on selection
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`pdfFile${i}`).addEventListener('change', function() {
+      const file = this.files[0];
+      const maxSizeBytes = 10 * 1024 * 1024; // 10 MB
+      const errorElement = document.getElementById(`fileSizeError${i}`);
+      
+      if (file && file.size > maxSizeBytes) {
+        errorElement.style.display = 'block';
+      } else {
+        errorElement.style.display = 'none';
+      }
+    });
   }
 </script>
 {% endblock %}

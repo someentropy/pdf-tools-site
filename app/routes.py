@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import pikepdf  # ✅ Add this line
 from flask import send_from_directory
 
+
 app_routes = Blueprint("routes", __name__)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 
@@ -22,9 +23,33 @@ def download_file():
 
 @app_routes.route("/compress", methods=["GET", "POST"])
 def compress_pdf():
+    # Define the maximum file size (10 MB)
+    MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
+    
     if request.method == "POST":
         try:
+            # Check if file part exists in request
+            if "file" not in request.files:
+                return render_template("compress.html", error="No file part in the request")
+            
             file = request.files["file"]
+            
+            # Check if a file was selected
+            if file.filename == "":
+                return render_template("compress.html", error="No file selected")
+            
+            # Check file size (server-side validation)
+            file.seek(0, 2)  # Go to the end of the file
+            file_size = file.tell()  # Get current position (file size)
+            file.seek(0)  # Reset file position to beginning
+            
+            # If file size exceeds limit, return error
+            if file_size > MAX_FILE_SIZE_BYTES:
+                return render_template(
+                    "compress.html", 
+                    error=f"File size exceeds the maximum limit of 10 MB. Your file is {file_size / (1024 * 1024):.2f} MB"
+                )
+            
             filename = secure_filename(file.filename)
 
             level_map = {
@@ -83,7 +108,6 @@ def compress_pdf():
                 compressed_size=round(compressed_size / 1024, 2),
                 compression_percent=compression_percent
             )
-
 
         except Exception as e:
             return f"Compression failed: {e}"
