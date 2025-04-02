@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
-{% block title %}Merge PDFs | CarbonPDF{% endblock %}
+{% block title %}Merge PDF Files Online for Free | CarbonPDF{% endblock %}
+{% block description %}Combine multiple PDF files into one document online for free. No signup required, fast and secure PDF merging.{% endblock %}
+{% block keywords %}merge PDF, combine PDF, join PDF files, PDF merger, unite PDF documents{% endblock %}
+{% block og_title %}Merge PDF Files Online for Free | CarbonPDF{% endblock %}
+{% block og_description %}Combine multiple PDF files into one document online for free. No signup required, fast and secure PDF merging.{% endblock %}
+
 {% block content %}
 <div style="max-width: 800px; margin: 40px auto; padding: 24px; background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
   <h1 style="font-size: 1.8rem; font-weight: bold; color: #3182ce; margin-bottom: 16px;">Merge PDFs</h1>
@@ -34,6 +39,44 @@
     <p>Merging PDFs... Please wait</p>
   </div>
 </div>
+
+<section style="max-width: 800px; margin: 60px auto 20px; padding: 0 20px;">
+  <h2 style="font-size: 1.5rem; color: #2d3748; margin-bottom: 20px;">How to Merge PDF Files Online</h2>
+  
+  <div style="color: #4a5568; line-height: 1.6;">
+    <p>Combining multiple PDF files into a single document helps organize related information and makes sharing easier. CarbonPDF's merge tool lets you combine up to 5 PDF files in just a few clicks, with no signup required.</p>
+    
+    <h3 style="font-size: 1.2rem; color: #2d3748; margin: 20px 0 10px;">When to Merge PDF Files</h3>
+    <ul style="padding-left: 20px; margin-bottom: 20px;">
+      <li>Combining chapters of a report or book</li>
+      <li>Creating a single document from scanned pages</li>
+      <li>Assembling application forms and supporting documents</li>
+      <li>Consolidating receipts or invoices</li>
+      <li>Creating comprehensive presentation materials</li>
+    </ul>
+    
+    <h3 style="font-size: 1.2rem; color: #2d3748; margin: 20px 0 10px;">How Our PDF Merger Works</h3>
+    <p>Our PDF merger tool is designed for simplicity and efficiency:</p>
+    <ol style="padding-left: 20px; margin-bottom: 20px;">
+      <li>Upload up to 5 PDF files in your desired order</li>
+      <li>Click the "Merge" button</li>
+      <li>Download your combined PDF file</li>
+    </ol>
+    <p>The files will be merged in the exact order you upload them, preserving all text, images, and formatting from the original documents.</p>
+    
+    <h3 style="font-size: 1.2rem; color: #2d3748; margin: 20px 0 10px;">Frequently Asked Questions</h3>
+    <dl>
+      <dt style="font-weight: 600; margin-top: 15px;">Can I rearrange pages after merging?</dt>
+      <dd>Our current tool merges files in the order they're uploaded. For page rearrangement, you might need a PDF editor after merging.</dd>
+      
+      <dt style="font-weight: 600; margin-top: 15px;">Do merged PDFs maintain bookmarks and links?</dt>
+      <dd>Yes, our merge tool preserves internal links, bookmarks, and other interactive elements from the original files.</dd>
+      
+      <dt style="font-weight: 600; margin-top: 15px;">What's the maximum file size I can merge?</dt>
+      <dd>Each file can be up to 10MB. For larger files, we recommend our desktop application.</dd>
+    </dl>
+  </div>
+</section>
 
 <script>
   // File size validation function for merge
@@ -103,5 +146,21 @@
       }
     });
   }
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CarbonPDF Merge",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free online tool to merge multiple PDF files into a single document. No signup required."
+}
 </script>
 {% endblock %}

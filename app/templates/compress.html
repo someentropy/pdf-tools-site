@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
-{% block title %}Compress PDF | CarbonPDF{% endblock %}
+{% block title %}Compress PDF Files Online for Free | CarbonPDF{% endblock %}
+{% block description %}Reduce PDF file size online for free while maintaining quality. Easy to use PDF compression with no signup required.{% endblock %}
+{% block keywords %}compress PDF, reduce PDF size, PDF compression tool, make PDF smaller, optimize PDF{% endblock %}
+{% block og_title %}Compress PDF Files Online for Free | CarbonPDF{% endblock %}
+{% block og_description %}Reduce PDF file size online for free while maintaining quality. Easy to use PDF compression with no signup required.{% endblock %}
+
 {% block content %}
 <div style="max-width: 800px; margin: 40px auto; padding: 24px; background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
   <h1 style="font-size: 1.8rem; font-weight: bold; color: #3182ce; margin-bottom: 16px;">Compress PDF</h1>
@@ -57,6 +62,45 @@
   </div>
 </div>
 
+<section style="max-width: 800px; margin: 60px auto 20px; padding: 0 20px;">
+  <h2 style="font-size: 1.5rem; color: #2d3748; margin-bottom: 20px;">How to Compress PDF Files Online</h2>
+  
+  <div style="color: #4a5568; line-height: 1.6;">
+    <p>Compressing PDF files is essential when you need to share documents via email, upload them to websites, or save storage space. CarbonPDF's free compression tool helps you reduce PDF file size while maintaining document quality.</p>
+    
+    <h3 style="font-size: 1.2rem; color: #2d3748; margin: 20px 0 10px;">Why Compress PDF Files?</h3>
+    <ul style="padding-left: 20px; margin-bottom: 20px;">
+      <li>Email attachments often have size limits</li>
+      <li>Websites typically restrict upload sizes</li>
+      <li>Smaller files load faster on mobile devices</li>
+      <li>Save storage space on your device</li>
+      <li>Faster document sharing and downloads</li>
+    </ul>
+    
+    <h3 style="font-size: 1.2rem; color: #2d3748; margin: 20px 0 10px;">How Our PDF Compression Works</h3>
+    <p>Our compression tool uses advanced algorithms to reduce file size while preserving document quality. The compression level slider lets you choose between maximum quality and maximum compression based on your needs:</p>
+    <ol style="padding-left: 20px; margin-bottom: 20px;">
+      <li><strong>Screen</strong> (highest compression): Best for PDFs that will be viewed on screens only</li>
+      <li><strong>eBook</strong>: Good balance for documents to be read on e-readers</li>
+      <li><strong>Printer</strong>: Balanced compression for documents that may be printed</li>
+      <li><strong>Prepress</strong>: Light compression for high-quality printing</li>
+      <li><strong>Default</strong> (lowest compression): Minimal changes to preserve maximum quality</li>
+    </ol>
+    
+    <h3 style="font-size: 1.2rem; color: #2d3748; margin: 20px 0 10px;">Frequently Asked Questions</h3>
+    <dl>
+      <dt style="font-weight: 600; margin-top: 15px;">Is my data secure when using CarbonPDF?</dt>
+      <dd>Yes, we process all files securely and delete them automatically after processing. Your files are never shared or stored permanently.</dd>
+      
+      <dt style="font-weight: 600; margin-top: 15px;">Will compression affect my PDF quality?</dt>
+      <dd>Our tool is designed to maintain an optimal balance between file size and quality. The compression level slider allows you to control this balance according to your needs.</dd>
+      
+      <dt style="font-weight: 600; margin-top: 15px;">What's the maximum file size I can compress?</dt>
+      <dd>Our online tool handles files up to 10MB. For larger files, try our desktop application.</dd>
+    </dl>
+  </div>
+</section>
+
 {% if download_link %}
 <script>
   window.onload = function () {
@@ -71,45 +115,71 @@
 {% endif %}
 
 <script>
-  // File size validation function
-  function validateFileSize() {
-    const fileInput = document.getElementById('pdfFile');
-    const file = fileInput.files[0];
-    const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
-    
-    if (file && file.size > maxSizeBytes) {
-      document.getElementById('fileSizeError').style.display = 'block';
-      return false; // Prevent form submission
-    } else {
-      document.getElementById('fileSizeError').style.display = 'none';
-      startProgress();
-      return true; // Allow form submission
-    }
+// Modified validateFileSize function - only showing the message when submitting
+function validateFileSize() {
+  const fileInput = document.getElementById('pdfFile');
+  const file = fileInput.files[0];
+  const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+  
+  if (file && file.size > maxSizeBytes) {
+    document.getElementById('fileSizeError').style.display = 'block';
+    return false; // Prevent form submission
+  } else {
+    document.getElementById('fileSizeError').style.display = 'none';
+    // Only start the progress when the form is actually submitted
+    startProgress();
+    return true; // Allow form submission
   }
+}
 
-  document.querySelector('input[name="file"]').addEventListener('change', function () {
-    const summary = document.getElementById("compressionSummary");
-    if (summary) summary.innerHTML = "";
-    const loading = document.getElementById("loadingMessage");
-    if (loading) loading.style.display = "none";
-    
-    // Check file size when file is selected
-    validateFileSize();
-  });
-
-  function updateLabel(val) {
-    const labels = {
-      5: "/screen",
-      4: "/ebook",
-      3: "/printer",
-      2: "/prepress",
-      1: "/default"
-    };
-    document.getElementById("compressionLabel").innerText = labels[val];
+// Modified file input change event handler
+document.querySelector('input[name="file"]').addEventListener('change', function () {
+  const summary = document.getElementById("compressionSummary");
+  if (summary) summary.innerHTML = "";
+  const loading = document.getElementById("loadingMessage");
+  if (loading) loading.style.display = "none";
+  
+  // Only check file size here, don't show the loading message
+  const fileInput = document.getElementById('pdfFile');
+  const file = fileInput.files[0];
+  const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+  
+  if (file && file.size > maxSizeBytes) {
+    document.getElementById('fileSizeError').style.display = 'block';
+  } else {
+    document.getElementById('fileSizeError').style.display = 'none';
   }
+});
 
-  function startProgress() {
-    document.getElementById("loadingMessage").style.display = "block";
-  }
+function updateLabel(val) {
+  const labels = {
+    5: "/screen",
+    4: "/ebook",
+    3: "/printer",
+    2: "/prepress",
+    1: "/default"
+  };
+  document.getElementById("compressionLabel").innerText = labels[val];
+}
+
+function startProgress() {
+  document.getElementById("loadingMessage").style.display = "block";
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CarbonPDF Compress",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free online tool to compress PDF files while maintaining quality. No signup required."
+}
 </script>
 {% endblock %}
