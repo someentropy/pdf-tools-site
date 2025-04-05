@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <meta name="description" content="{% block description %}Free online PDF tools to compress, merge, and edit your PDF files. No signup required.{% endblock %}">
@@ -12,6 +13,12 @@
   <meta property="og:url" content="https://carbonpdf.com{{ request.path }}">
   <meta property="og:image" content="https://carbonpdf.com/static/carbonpdf-og.png">
   <link rel="canonical" href="https://carbonpdf.com{{ request.path }}">
+  <meta name="google-adsense-account" content="ca-pub-7978428607759775">
+  <meta name="google-site-verification" content="RlirbFkjYT3NhdzALytwH3YtgMHO6vgGwJxQs0AGnZQ" />
+  <!-- Google AdSense verification -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7978428607757975"
+  crossorigin="anonymous"></script>
+
   <title>{% block title %}CarbonPDF{% endblock %}</title>
   <link rel="icon" href="/static/favicon.png">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
@@ -62,8 +69,8 @@
       input[type="button"],
       a.button,
       .nav-link {
-        min-height: 44px !important;
-        min-width: 44px !important;
+        min-height: 48px !important;
+        min-width: 48px !important;
       }
       
       nav a {
@@ -80,8 +87,10 @@
         <h1 style="font-size: 1.4rem; margin: 0;">CarbonPDF</h1>
       </a>
       <nav class="mobile-center" style="display: flex; gap: 20px;" aria-label="Main Navigation">
-        <a class="nav-link" href="/compress" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Compress PDF</a>
-        <a class="nav-link" href="/merge" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Merge PDFs</a>
+        <a class="nav-link" href="/compress-pdf-online" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Compress PDF</a>
+        <a class="nav-link" href="/merge-pdf-files" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Merge PDFs</a>
+        <a class="nav-link" href="/pdf-file-size-guide" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Size Guide</a>
+        <a class="nav-link" href="/pdf-accessibility-guide" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Accessibility</a>
       </nav>
     </div>
   </header>
@@ -95,6 +104,8 @@
       <p>&copy; 2025 CarbonPDF. Built with love.</p>
       <nav style="margin-top: 12px;" aria-label="Footer Navigation">
         <a href="/about" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">About</a>
+        <a href="/pdf-accessibility-guide" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Accessibility Guide</a>
+        <a href="/pdf-file-size-guide" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">PDF Size Guide</a>
         <a href="/privacy" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Privacy Policy</a>
         <a href="/terms" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Terms of Service</a>
         <a href="/contact" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Contact</a>

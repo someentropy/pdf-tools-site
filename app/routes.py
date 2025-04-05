@@ -1,19 +1,54 @@
 import subprocess
 import os
-from flask import Blueprint, render_template, request, send_file, current_app
+from flask import Blueprint, render_template, request, send_file, current_app, redirect, url_for
 from PyPDF2 import PdfMerger
 from werkzeug.utils import secure_filename
-import pikepdf  # ✅ Add this line
+import pikepdf
 from flask import send_from_directory
-
+import json
+import os
+from datetime import datetime
+from flask import flash, redirect, url_for
 
 app_routes = Blueprint("routes", __name__)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 
+from flask import request, redirect
 
-@app_routes.route("/")
+@app_routes.before_request
+def redirect_www_and_root_domains():
+    host = request.host.lower()
+    path = request.path.lower()
+    user_agent = request.headers.get("User-Agent", "").lower()
+
+    # Let bots through for verification
+    if "googlebot" in user_agent or "adsense" in user_agent:
+        return  # allow crawlers
+
+    # Redirect www → root domain
+    if host == "www.carbonprojects.dev":
+        new_url = request.url.replace("://www.", "://", 1)
+        return redirect(new_url, code=301)
+
+    # Let "/" and "/ads.txt" on root domain serve locally
+    if host == "carbonprojects.dev" and path in ["/", "/ads.txt"]:
+        return  # allow Flask to handle it normally
+
+    # Redirect everything else from root domain
+    if host == "carbonprojects.dev":
+        return redirect("https://freepdftools.carbonprojects.dev" + request.full_path, code=301)
+
+
+
+
+
+@app_routes.route("/", methods=["GET"])
 def index():
+    if request.host.lower() == "carbonprojects.dev":
+        return render_template("root_home.html")
     return render_template("index.html")
+
+
 
 @app_routes.route("/download")
 def download_file():
@@ -21,8 +56,20 @@ def download_file():
     return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
 
 
-@app_routes.route("/compress", methods=["GET", "POST"])
-def compress_pdf():
+# Add redirects from old URLs to new URLs
+@app_routes.route("/compress")
+def compress_redirect():
+    return redirect(url_for('routes.compress_pdf_online'), code=301)
+
+
+@app_routes.route("/merge")
+def merge_redirect():
+    return redirect(url_for('routes.merge_pdf_files'), code=301)
+
+
+# New SEO-friendly URL for compress
+@app_routes.route("/compress-pdf-online", methods=["GET", "POST"])
+def compress_pdf_online():
     # Define the maximum file size (10 MB)
     MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
     
@@ -115,14 +162,9 @@ def compress_pdf():
     return render_template("compress.html")
 
 
-
-
-
-
-
-
-@app_routes.route("/merge", methods=["GET", "POST"])
-def merge_pdf():
+# New SEO-friendly URL for merge
+@app_routes.route("/merge-pdf-files", methods=["GET", "POST"])
+def merge_pdf_files():
     if request.method == "POST":
         file_keys = ["file1", "file2", "file3", "file4", "file5"]
         merger = PdfMerger()
@@ -147,4 +189,129 @@ def merge_pdf():
     return render_template("merge.html")
 
 
+# New routes for the additional content pages
+@app_routes.route("/pdf-file-size-guide")
+def pdf_file_size_guide():
+    return render_template("pdf-file-size-guide.html")
 
+
+@app_routes.route("/pdf-accessibility-guide")
+def pdf_accessibility_guide():
+    return render_template("pdf-accessibility-guide.html")
+
+
+# Routes for the existing pages mentioned in the footer
+@app_routes.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app_routes.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+
+@app_routes.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+
+# Add this code to your routes.py file (for the contact route)
+@app_routes.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        message = request.form.get("message", "")
+        
+        # Validate inputs
+        if not name or not email or not message:
+            return render_template("contact.html", error="All fields are required.")
+        
+        if len(message) > 250:
+            return render_template("contact.html", error="Message is too long. Please limit to 250 characters.")
+        
+        try:
+            # Create messages directory if it doesn't exist
+            messages_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "messages")
+            os.makedirs(messages_dir, exist_ok=True)
+            
+            # Generate a filename with timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{timestamp}_{email.replace('@', '_at_')}.json"
+            
+            # Prepare the message data
+            message_data = {
+                "name": name,
+                "email": email,
+                "message": message,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            # Save the message to a JSON file
+            message_path = os.path.join(messages_dir, filename)
+            with open(message_path, 'w') as f:
+                json.dump(message_data, f, indent=4)
+            
+            # Return success message
+            return render_template("contact.html", success=True)
+            
+        except Exception as e:
+            print(f"Error saving contact message: {e}")
+            return render_template("contact.html", error="Sorry, there was an error processing your message. Please try again later.")
+    
+    # GET request - just show the form
+    return render_template("contact.html")
+
+
+# Generate a sitemap.xml dynamically
+@app_routes.route("/sitemap.xml")
+def sitemap():
+    """Generate a dynamic sitemap."""
+    pages = [
+        {"loc": "/", "priority": "1.0"},
+        {"loc": "/compress-pdf-online", "priority": "0.8"},
+        {"loc": "/merge-pdf-files", "priority": "0.8"},
+        {"loc": "/pdf-file-size-guide", "priority": "0.7"},
+        {"loc": "/pdf-accessibility-guide", "priority": "0.7"},
+        {"loc": "/about", "priority": "0.5"},
+        {"loc": "/privacy", "priority": "0.3"},
+        {"loc": "/terms", "priority": "0.3"},
+        {"loc": "/contact", "priority": "0.5"}
+    ]
+    
+    xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    base_url = "https://freepdftools.carbonprojects.dev"
+    
+    for page in pages:
+        xml_content += '  <url>\n'
+        xml_content += f'    <loc>{base_url}{page["loc"]}</loc>\n'
+        xml_content += '    <lastmod>2025-04-01</lastmod>\n'
+        xml_content += '    <changefreq>monthly</changefreq>\n'
+        xml_content += f'    <priority>{page["priority"]}</priority>\n'
+        xml_content += '  </url>\n'
+    
+    xml_content += '</urlset>'
+    
+    return xml_content, 200, {'Content-Type': 'application/xml'}
+
+
+
+# Generate robots.txt
+@app_routes.route("/robots.txt")
+def robots():
+    """Generate a robots.txt file."""
+    return """User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /internal/
+
+Sitemap: https://freepdftools.carbonprojects.dev/sitemap.xml
+""", 200, {'Content-Type': 'text/plain'}
+
+
+@app_routes.route("/ads.txt")
+def ads_txt():
+    return """google.com, pub-7978428607757975, DIRECT, f08c47fec0942fa0""", 200, {'Content-Type': 'text/plain'}

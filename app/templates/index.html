@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
-{% block title %}Free PDF Tools Online | CarbonPDF{% endblock %}
-{% block description %}CarbonPDF offers free online tools to compress, merge and edit PDF files without signup. Fast, secure and easy to use.{% endblock %}
+{% block title %}Free PDF Tools Online - Compress & Merge PDFs | CarbonPDF{% endblock %}
+{% block description %}CarbonPDF offers 100% free online tools to compress, merge and edit PDF files. No signup, no watermarks, and no file limits. Fast, secure and easy to use.{% endblock %}
 {% block keywords %}PDF tools, free PDF editor, compress PDF online, merge PDF files, no signup PDF tools{% endblock %}
 {% block og_title %}Free PDF Tools Online | CarbonPDF{% endblock %}
 {% block og_description %}CarbonPDF offers free online tools to compress, merge and edit PDF files without signup. Fast, secure and easy to use.{% endblock %}
@@ -12,16 +12,23 @@
   
   <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin: 48px 0; text-align: left;">
     <article style="display: block; background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-decoration: none;">
-      <a href="/compress" style="text-decoration: none;">
+      <a href="/compress-pdf-online" style="text-decoration: none;">
         <h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 12px;">Compress PDF</h2>
         <p style="color: #4a5568;">Reduce file size while maintaining quality for easier sharing.</p>
       </a>
     </article>
 
     <article style="display: block; background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 24px; text-decoration: none;">
-      <a href="/merge" style="text-decoration: none;">
+      <a href="/merge-pdf-files" style="text-decoration: none;">
         <h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 12px;">Merge PDFs</h2>
         <p style="color: #4a5568;">Combine multiple PDF files into a single document.</p>
+      </a>
+    </article>
+
+    <article style="display: block; background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 24px; text-decoration: none;">
+      <a href="/pdf-file-size-guide" style="text-decoration: none;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 12px;">PDF Size Guide</h2>
+        <p style="color: #4a5568;">Learn how to optimize PDF sizes for different purposes.</p>
       </a>
     </article>
   </div>
@@ -53,12 +60,35 @@
     <div style="text-align: left; margin-bottom: 30px;">
       <h3 style="font-size: 1.3rem; font-weight: 500; color: #1a202c; margin-bottom: 15px;">PDF Compression</h3>
       <p style="color: #4a5568; line-height: 1.6;">Our PDF compression tool reduces file size while maintaining document quality. Perfect for email attachments, uploading to websites, or saving storage space. Choose your compression level based on your needs.</p>
+      <p style="margin-top: 10px;"><a href="/compress-pdf-online" style="color: #3182ce; text-decoration: none; font-weight: 500;">Try our PDF compression tool →</a></p>
     </div>
     
     <div style="text-align: left; margin-bottom: 30px;">
       <h3 style="font-size: 1.3rem; font-weight: 500; color: #1a202c; margin-bottom: 15px;">PDF Merger</h3>
       <p style="color: #4a5568; line-height: 1.6;">Combine multiple PDF files into a single document with our PDF merger tool. Organize related information, create comprehensive reports, or consolidate multiple scanned pages into one PDF file.</p>
+      <p style="margin-top: 10px;"><a href="/merge-pdf-files" style="color: #3182ce; text-decoration: none; font-weight: 500;">Try our PDF merger tool →</a></p>
+    </div>
+
+    <div style="text-align: left; margin-bottom: 30px;">
+      <h3 style="font-size: 1.3rem; font-weight: 500; color: #1a202c; margin-bottom: 15px;">PDF File Size Guide</h3>
+      <p style="color: #4a5568; line-height: 1.6;">Learn how to optimize PDF file sizes for different purposes including email, web, printing, and archiving. Our expert guide helps you create the perfect PDF for every situation.</p>
+      <p style="margin-top: 10px;"><a href="/pdf-file-size-guide" style="color: #3182ce; text-decoration: none; font-weight: 500;">Read our PDF size guide →</a></p>
     </div>
   </section>
 </section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "CarbonPDF",
+  "url": "https://carbonpdf.com",
+  "logo": "https://carbonpdf.com/static/carbonpdf-og.png",
+  "description": "Free online PDF tools to compress, merge and edit PDF files without signup. Fast, secure and easy to use.",
+  "sameAs": [
+    "https://twitter.com/carbonpdf",
+    "https://facebook.com/carbonpdf"
+  ]
+}
+</script>
 {% endblock %}
