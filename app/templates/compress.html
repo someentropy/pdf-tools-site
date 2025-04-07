@@ -12,7 +12,7 @@
   <!-- File size limit notice -->
   <div style="background-color: #ebf8ff; border-left: 4px solid #3182ce; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
     <p style="margin: 0; color: #2c5282; font-size: 0.9rem;">
-      <strong>Note:</strong> Maximum file size is 10 MB. For larger files, please try our desktop application.
+      <strong>Note:</strong> Maximum file size is 20 MB.
     </p>
   </div>
   
@@ -30,7 +30,7 @@
       <label style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Select PDF to Compress</label>
       <input type="file" name="file" id="pdfFile" required style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px;" accept=".pdf" />
       <div id="fileSizeError" style="color: #e53e3e; font-size: 0.8rem; margin-top: 6px; display: none;">
-        File size exceeds the maximum limit of 10 MB. Please select a smaller file.
+        File size exceeds the maximum limit of 20 MB. Please select a smaller file.
       </div>
     </div>
 
@@ -104,7 +104,7 @@
       <dd>Our tool is designed to maintain an optimal balance between file size and quality. The compression level slider allows you to control this balance according to your needs.</dd>
       
       <dt style="font-weight: 600; margin-top: 15px;">What's the maximum file size I can compress?</dt>
-      <dd>Our online tool handles files up to 10MB. For larger files, try our desktop application.</dd>
+      <dd>Our online tool handles files up to 20MB.</dd>
     </dl>
   </div>
 </section>
@@ -127,7 +127,7 @@
 function validateFileSize() {
   const fileInput = document.getElementById('pdfFile');
   const file = fileInput.files[0];
-  const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+  const maxSizeBytes = 20 * 1024 * 1024; // 20 MB in bytes
   
   if (file && file.size > maxSizeBytes) {
     document.getElementById('fileSizeError').style.display = 'block';
@@ -150,7 +150,7 @@ document.querySelector('input[name="file"]').addEventListener('change', function
   // Only check file size here, don't show the loading message
   const fileInput = document.getElementById('pdfFile');
   const file = fileInput.files[0];
-  const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+  const maxSizeBytes = 20 * 1024 * 1024; // 20 MB in bytes
   
   if (file && file.size > maxSizeBytes) {
     document.getElementById('fileSizeError').style.display = 'block';

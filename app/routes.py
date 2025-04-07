@@ -70,8 +70,8 @@ def merge_redirect():
 # New SEO-friendly URL for compress
 @app_routes.route("/compress-pdf-online", methods=["GET", "POST"])
 def compress_pdf_online():
-    # Define the maximum file size (10 MB)
-    MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
+    # Define the maximum file size (20 MB)
+    MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024  # 20 MB
     
     if request.method == "POST":
         try:
@@ -94,7 +94,7 @@ def compress_pdf_online():
             if file_size > MAX_FILE_SIZE_BYTES:
                 return render_template(
                     "compress.html", 
-                    error=f"File size exceeds the maximum limit of 10 MB. Your file is {file_size / (1024 * 1024):.2f} MB"
+                    error=f"File size exceeds the maximum limit of 20 MB. Your file is {file_size / (1024 * 1024):.2f} MB"
                 )
             
             filename = secure_filename(file.filename)

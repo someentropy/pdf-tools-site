@@ -12,7 +12,7 @@
   <!-- File size limit notice -->
   <div style="background-color: #ebf8ff; border-left: 4px solid #3182ce; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
     <p style="margin: 0; color: #2c5282; font-size: 0.9rem;">
-      <strong>Note:</strong> Maximum file size is 10 MB per file. For larger files, please try our desktop application.
+      <strong>Note:</strong> Maximum file size is 20 MB per file. For larger files, please try our desktop application.
     </p>
   </div>
   
@@ -24,7 +24,7 @@
       <label style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 4px;">File {{ i }}:</label>
       <input type="file" name="file{{ i }}" id="pdfFile{{ i }}" accept=".pdf" style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;" />
       <div id="fileSizeError{{ i }}" style="color: #e53e3e; font-size: 0.8rem; margin-top: 6px; display: none;">
-        File size exceeds the maximum limit of 10 MB.
+        File size exceeds the maximum limit of 20 MB.
       </div>
     </div>
     {% endfor %}
@@ -81,7 +81,7 @@
       <dd>Yes, our merge tool preserves internal links, bookmarks, and other interactive elements from the original files.</dd>
       
       <dt style="font-weight: 600; margin-top: 15px;">What's the maximum file size I can merge?</dt>
-      <dd>Each file can be up to 10MB. For larger files, we recommend our desktop application.</dd>
+      <dd>Each file can be up to 20MB.</dd>
     </dl>
   </div>
 </section>
@@ -89,7 +89,7 @@
 <script>
   // File size validation function for merge
   function validateFileSizes() {
-    const maxSizeBytes = 10 * 1024 * 1024; // 10 MB in bytes
+    const maxSizeBytes = 20 * 1024 * 1024; // 20 MB in bytes
     let allFilesValid = true;
     let atLeastOneFileSelected = false;
     
@@ -144,7 +144,7 @@
   for (let i = 1; i <= 5; i++) {
     document.getElementById(`pdfFile${i}`).addEventListener('change', function() {
       const file = this.files[0];
-      const maxSizeBytes = 10 * 1024 * 1024; // 10 MB
+      const maxSizeBytes = 20 * 1024 * 1024; // 20 MB
       const errorElement = document.getElementById(`fileSizeError${i}`);
       
       if (file && file.size > maxSizeBytes) {
