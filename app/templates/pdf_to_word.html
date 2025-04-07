@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}PDF to Word Converter - Free & Secure | FreePDFTools{% endblock %}
+{% block description %}Convert PDF files to editable Word documents for free. No signup required. Fast, accurate, and secure PDF to DOCX conversion online.{% endblock %}
+{% block keywords %}PDF to Word, convert PDF, PDF to DOCX, free PDF to Word online{% endblock %}
+{% block og_title %}Convert PDF to Word Online | FreePDFTools{% endblock %}
+{% block og_description %}Turn your PDF into an editable Word document in seconds. No signup, no watermarks.{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 24px; background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <h1 style="font-size: 1.8rem; font-weight: bold; color: #3182ce; margin-bottom: 16px;">Convert PDF to Word (DOCX)</h1>
+
+  {% if error %}
+    <div style="color: #e53e3e; margin-bottom: 16px;">⚠️ {{ error }}</div>
+  {% endif %}
+
+  {% if success %}
+    <div style="color: #38a169; margin-bottom: 16px;">✅ Conversion successful! Your download will begin shortly.</div>
+    <script>
+      window.location.href = "{{ download_link }}";
+    </script>
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data">
+    <label for="file" style="display: block; font-weight: 500; margin-bottom: 8px;">Select a PDF file:</label>
+    <input type="file" name="file" accept=".pdf" required style="margin-bottom: 16px; display: block;" />
+    <button type="submit" style="background-color: #3182ce; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Convert</button>
+  </form>
+</div>
+{% endblock %}

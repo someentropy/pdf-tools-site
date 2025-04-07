@@ -11,6 +11,8 @@ import json
 import os
 from datetime import datetime
 from flask import flash, redirect, url_for, jsonify
+from pdf2docx import Converter  # Add this near your other imports
+
 
 app_routes = Blueprint("routes", __name__)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
@@ -307,6 +309,7 @@ def sitemap():
         {"loc": "/compress-pdf-online", "priority": "0.8"},
         {"loc": "/merge-pdf-files", "priority": "0.8"},
         {"loc": "/split-pdf", "priority": "0.8"},
+        {"loc": "/pdf-to-word", "priority": "0.8"},
         {"loc": "/pdf-file-size-guide", "priority": "0.7"},
         {"loc": "/pdf-accessibility-guide", "priority": "0.7"},
         {"loc": "/about", "priority": "0.5"},
@@ -460,3 +463,38 @@ def split_pdf():
             return render_template("split.html", success=True, download_link=f"/download?filename={zip_filename}")
 
     return render_template("split.html")
+
+@app_routes.route("/pdf-to-word", methods=["GET", "POST"])
+def pdf_to_word():
+    if request.method == "POST":
+        if "file" not in request.files:
+            return render_template("pdf_to_word.html", error="No file uploaded")
+
+        file = request.files["file"]
+        if file.filename == "":
+            return render_template("pdf_to_word.html", error="No file selected")
+
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        base_name = os.path.splitext(filename)[0]
+        pdf_path = os.path.join(UPLOAD_FOLDER, f"{timestamp}_{filename}")
+        docx_filename = f"{timestamp}_{base_name}.docx"
+        docx_path = os.path.join(UPLOAD_FOLDER, docx_filename)
+
+        file.save(pdf_path)
+
+        try:
+            # Convert PDF to DOCX
+            converter = Converter(pdf_path)
+            converter.convert(docx_path, start=0, end=None)
+            converter.close()
+
+            # Delete the PDF input immediately
+            os.remove(pdf_path)
+
+            return render_template("pdf_to_word.html", success=True, download_link=f"/download?filename={docx_filename}")
+
+        except Exception as e:
+            return render_template("pdf_to_word.html", error=f"Conversion failed: {str(e)}")
+
+    return render_template("pdf_to_word.html")

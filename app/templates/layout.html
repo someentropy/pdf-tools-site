@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <meta name="description" content="{% block description %}Free online PDF tools to compress, merge, and edit your PDF files. No signup required.{% endblock %}">
@@ -15,9 +14,7 @@
   <link rel="canonical" href="https://freepdftools.carbonprojects.dev{{ request.path }}">
   <meta name="google-adsense-account" content="ca-pub-7978428607759775">
   <meta name="google-site-verification" content="RlirbFkjYT3NhdzALytwH3YtgMHO6vgGwJxQs0AGnZQ" />
-  <!-- Google AdSense verification -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7978428607757975"
-  crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7978428607757975" crossorigin="anonymous"></script>
 
   <title>{% block title %}FreePDFTools{% endblock %}</title>
   <link rel="icon" href="/static/favicon.png">
@@ -32,47 +29,18 @@
       padding: 0;
       min-height: 100vh;
     }
-    
-    /* Mobile-first responsive styles */
+
     @media (max-width: 640px) {
-      h1 {
-        font-size: 1.5rem !important;
-      }
-      
-      h2 {
-        font-size: 1.3rem !important;
-      }
-      
-      .mobile-full {
-        width: 100% !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-      }
-      
-      .mobile-stack {
-        flex-direction: column !important;
-      }
-      
-      .mobile-center {
-        text-align: center !important;
-      }
-      
-      .mobile-mb {
-        margin-bottom: 15px !important;
-      }
-    }
-    
-    /* Tap target sizing for mobile */
-    @media (max-width: 640px) {
-      button, 
-      input[type="submit"],
-      input[type="button"],
-      a.button,
-      .nav-link {
+      h1 { font-size: 1.5rem !important; }
+      h2 { font-size: 1.3rem !important; }
+      .mobile-full { width: 100% !important; padding-left: 10px !important; padding-right: 10px !important; }
+      .mobile-stack { flex-direction: column !important; }
+      .mobile-center { text-align: center !important; }
+      .mobile-mb { margin-bottom: 15px !important; }
+      button, input[type="submit"], input[type="button"], a.button, .nav-link {
         min-height: 48px !important;
         min-width: 48px !important;
       }
-      
       nav a {
         padding: 10px !important;
         margin: 0 5px !important;
@@ -87,11 +55,12 @@
         <h1 style="font-size: 1.4rem; margin: 0;">FreePDFTools</h1>
       </a>
       <nav class="mobile-center" style="display: flex; gap: 20px;" aria-label="Main Navigation">
-        <a class="nav-link" href="/compress-pdf-online" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Compress PDF</a>
-        <a class="nav-link" href="/merge-pdf-files" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Merge PDFs</a>
-        <a class="nav-link" href="/split-pdf" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Split PDF</a>
-        <a class="nav-link" href="/pdf-file-size-guide" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Size Guide</a>
-        <a class="nav-link" href="/pdf-accessibility-guide" style="font-size: 0.9rem; color: #4a5568; text-decoration: none; transition: color 0.2s;">Accessibility</a>
+        <a class="nav-link" href="/compress-pdf-online" style="font-size: 0.9rem; color: #4a5568; text-decoration: none;">Compress PDF</a>
+        <a class="nav-link" href="/merge-pdf-files" style="font-size: 0.9rem; color: #4a5568; text-decoration: none;">Merge PDFs</a>
+        <a class="nav-link" href="/split-pdf" style="font-size: 0.9rem; color: #4a5568; text-decoration: none;">Split PDF</a>
+        <a class="nav-link" href="/pdf-to-word" style="font-size: 0.9rem; color: #4a5568; text-decoration: none;">PDF to Word</a>
+        <a class="nav-link" href="/pdf-file-size-guide" style="font-size: 0.9rem; color: #4a5568; text-decoration: none;">Size Guide</a>
+        <a class="nav-link" href="/pdf-accessibility-guide" style="font-size: 0.9rem; color: #4a5568; text-decoration: none;">Accessibility</a>
       </nav>
     </div>
   </header>
@@ -105,27 +74,23 @@
       <p>&copy; 2025 FreePDFTools. Built with love.</p>
       <nav style="margin-top: 12px;" aria-label="Footer Navigation">
         <a href="/about" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">About</a>
-        <a href="/pdf-accessibility-guide" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Accessibility Guide</a>
-        <a href="/pdf-file-size-guide" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">PDF Size Guide</a>
-        <a href="/privacy" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Privacy Policy</a>
-        <a href="/terms" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Terms of Service</a>
         <a href="/contact" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Contact</a>
+        <a href="/privacy" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Privacy</a>
+        <a href="/terms" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Terms</a>
+        <a href="/pdf-file-size-guide" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">PDF Size Guide</a>
+        <a href="/pdf-accessibility-guide" style="color: #a0aec0; margin: 0 10px; text-decoration: none;">Accessibility Guide</a>
       </nav>
     </div>
   </footer>
+  
 
   <script>
-    // Add hover effect to navigation links
     document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('mouseover', () => {
-        link.style.color = '#3182ce';
-      });
-      link.addEventListener('mouseout', () => {
-        link.style.color = '#4a5568';
-      });
+      link.addEventListener('mouseover', () => link.style.color = '#3182ce');
+      link.addEventListener('mouseout', () => link.style.color = '#4a5568');
     });
   </script>
-  
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
