@@ -60,22 +60,26 @@ def download_file():
     if not os.path.exists(file_path):
         return "File not found", 404
 
-    # Read the file into memory
+    # Read file into memory
     with open(file_path, "rb") as f:
         file_data = f.read()
 
-    # Delete the file after reading
+    # Delete the file from disk
     try:
         os.remove(file_path)
     except Exception as e:
         print(f"Error deleting file {filename}: {e}")
 
+    # Guess mimetype
+    mimetype = "application/pdf" if filename.endswith(".pdf") else "application/zip"
+
     return send_file(
         io.BytesIO(file_data),
         as_attachment=True,
         download_name=filename,
-        mimetype="application/pdf"
+        mimetype=mimetype
     )
+
 
 
 
@@ -203,11 +207,20 @@ def merge_pdf_files():
         if uploaded_count < 2:
             return "Please upload at least 2 PDF files to merge."
 
-        merged_path = os.path.join(UPLOAD_FOLDER, "merged.pdf")
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        merged_filename = f"merged_{timestamp}.pdf"
+        merged_path = os.path.join(UPLOAD_FOLDER, merged_filename)
+
         merger.write(merged_path)
         merger.close()
 
-        return send_file(merged_path, as_attachment=True)
+        return send_file(
+            merged_path,
+            as_attachment=True,
+            download_name=merged_filename
+        )
+
+
 
     return render_template("merge.html")
 
@@ -422,7 +435,9 @@ def split_pdf():
                 return render_template("split.html", error="No pages selected")
 
             input_path = os.path.join(UPLOAD_FOLDER, filename)
-            zip_filename = f"selected_pages_{os.path.splitext(filename)[0]}.zip"
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            zip_filename = f"split_{timestamp}.zip"
+
             zip_path = os.path.join(UPLOAD_FOLDER, zip_filename)
 
             pdf_reader = PdfReader(input_path)
