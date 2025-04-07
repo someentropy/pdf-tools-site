@@ -7,7 +7,7 @@ app = create_app()
 @app.before_request
 def redirect_to_new_domain():
     if request.host == "freepdftools.fly.dev":
-        return redirect(f"https://carbonpdf.com{request.full_path}", code=301)
+        return redirect(f"https://freepdftools.carbonprojects.dev{request.full_path}", code=301)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
