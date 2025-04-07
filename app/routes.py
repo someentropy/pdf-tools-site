@@ -1,4 +1,4 @@
-
+import io
 import subprocess
 import os
 import zipfile  # New import for PDF splitting
@@ -55,7 +55,28 @@ def index():
 @app_routes.route("/download")
 def download_file():
     filename = request.args.get("filename")
-    return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+    if not os.path.exists(file_path):
+        return "File not found", 404
+
+    # Read the file into memory
+    with open(file_path, "rb") as f:
+        file_data = f.read()
+
+    # Delete the file after reading
+    try:
+        os.remove(file_path)
+    except Exception as e:
+        print(f"Error deleting file {filename}: {e}")
+
+    return send_file(
+        io.BytesIO(file_data),
+        as_attachment=True,
+        download_name=filename,
+        mimetype="application/pdf"
+    )
+
 
 
 # Add redirects from old URLs to new URLs
