@@ -1,0 +1,22 @@
+<hr style="margin: 40px 0; border: none; border-top: 1px solid #e2e8f0;" />
+
+<div style="text-align: center; margin-bottom: 40px;">
+  <p style="font-size: 1.1rem; font-weight: 500; color: #2d3748;">📤 Share this tool:</p>
+  <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px;">
+
+    <a href="https://wa.me/?text={{ request.url }}" target="_blank" rel="noopener" title="Share on WhatsApp"
+       style="text-decoration: none; color: #25d366; font-weight: bold;">WhatsApp</a>
+
+    <a href="https://twitter.com/intent/tweet?text=Check out this free PDF tool! {{ request.url }}" target="_blank" rel="noopener" title="Share on Twitter"
+       style="text-decoration: none; color: #1da1f2; font-weight: bold;">Twitter</a>
+
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" rel="noopener" title="Share on Facebook"
+       style="text-decoration: none; color: #1877f2; font-weight: bold;">Facebook</a>
+
+    <a href="mailto:?subject=Free PDF Tool&body=Check this out: {{ request.url }}" title="Share via Email"
+       style="text-decoration: none; color: #718096; font-weight: bold;">Email</a>
+
+    <button onclick="navigator.clipboard.writeText('{{ request.url }}'); alert('Link copied!');"
+       style="border: none; background: none; color: #4a5568; cursor: pointer; font-weight: bold;">Copy Link</button>
+  </div>
+</div>
