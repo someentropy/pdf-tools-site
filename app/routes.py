@@ -24,7 +24,11 @@ def redirect_www_and_root_domains():
     # Let bots through for verification
     if "googlebot" in user_agent or "adsense" in user_agent:
         return  # allow crawlers
-
+    
+    # For all users including bots, ensure canonical consistency
+    if host == "carbonpdf.com" or host == "www.carbonpdf.com":
+        return redirect("https://freepdftools.carbonprojects.dev" + request.full_path, code=301)
+    
     # Redirect www → root domain
     if host == "www.carbonprojects.dev":
         new_url = request.url.replace("://www.", "://", 1)
@@ -216,17 +220,22 @@ def terms():
 @app_routes.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        # Your existing form processing code...
-        
         try:
+            # Extract form data
+            name = request.form.get("name", "")
+            email = request.form.get("email", "")
+            subject = request.form.get("subject", "")
+            message = request.form.get("message", "")
+            
             # Create messages directory on the volume
             messages_dir = "/app/messages"  # This is where the volume is mounted
             os.makedirs(messages_dir, exist_ok=True)
             
-            # Rest of your code stays the same
+            # Create a timestamp for the filename
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"{timestamp}_{email.replace('@', '_at_')}.json"
             
+            # Create the message data structure
             message_data = {
                 "name": name,
                 "email": email,
@@ -235,6 +244,7 @@ def contact():
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             
+            # Save the message to the volume
             message_path = os.path.join(messages_dir, filename)
             with open(message_path, 'w') as f:
                 json.dump(message_data, f, indent=4)
@@ -300,3 +310,61 @@ Sitemap: https://freepdftools.carbonprojects.dev/sitemap.xml
 @app_routes.route("/ads.txt")
 def ads_txt():
     return """google.com, pub-7978428607757975, DIRECT, f08c47fec0942fa0""", 200, {'Content-Type': 'text/plain'}
+
+@app_routes.route("/admin/messages", methods=["GET"])
+def admin_messages():
+
+    admin_key = os.environ.get('ADMIN_KEY', 'default-key-for-development')
+
+    if request.args.get('key') != admin_key:
+        return "Unauthorized", 401
+
+        
+    messages_dir = "/app/messages"
+    messages = []
+    
+    # Make sure the directory exists
+    if not os.path.exists(messages_dir):
+        return render_template("admin_messages.html", messages=[], message_count=0)
+    
+    # Get all message files
+    for filename in os.listdir(messages_dir):
+        if filename.endswith('.json'):
+            file_path = os.path.join(messages_dir, filename)
+            try:
+                with open(file_path, 'r') as f:
+                    message_data = json.load(f)
+                    # Add filename to message data for deletion reference
+                    message_data['filename'] = filename
+                    messages.append(message_data)
+            except:
+                continue
+    
+    # Sort messages by timestamp (newest first)
+    messages.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+    
+    return render_template("admin_messages.html", messages=messages, message_count=len(messages))
+
+@app_routes.route("/admin/messages/delete", methods=["GET"])
+def delete_message():
+
+    admin_key = os.environ.get('ADMIN_KEY', 'default-key-for-development')
+
+    # Simple authentication with a secret key in the URL
+    if request.args.get('key') != admin_key:
+        return "Unauthorized", 401
+    
+    filename = request.args.get('filename')
+    if not filename:
+        return "No filename specified", 400
+    
+    # Make sure the filename is safe (no path traversal)
+    filename = os.path.basename(filename)
+    
+    file_path = os.path.join("/app/messages", filename)
+    
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return redirect(f"/admin/messages?key={request.args.get('key')}&deleted=true")
+    else:
+        return "File not found", 404

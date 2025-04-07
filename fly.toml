@@ -22,3 +22,6 @@ primary_region = 'jnb'
   cpu_kind = 'shared'
   cpus = 1
 
+[mounts]
+  source = "messages_data"  # This matches the name shown in fly volumes list
+  destination = "/app/messages"
