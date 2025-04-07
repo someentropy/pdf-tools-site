@@ -8,7 +8,7 @@ from flask import send_from_directory
 import json
 import os
 from datetime import datetime
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, jsonify
 
 app_routes = Blueprint("routes", __name__)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
@@ -39,15 +39,11 @@ def redirect_www_and_root_domains():
         return redirect("https://freepdftools.carbonprojects.dev" + request.full_path, code=301)
 
 
-
-
-
 @app_routes.route("/", methods=["GET"])
 def index():
     if request.host.lower() == "carbonprojects.dev":
         return render_template("root_home.html")
     return render_template("index.html")
-
 
 
 @app_routes.route("/download")
@@ -216,52 +212,42 @@ def terms():
     return render_template("terms.html")
 
 
-# Add this code to your routes.py file (for the contact route)
+# Updated contact route with support for AJAX and more fields
 @app_routes.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
-        message = request.form.get("message", "")
-        
-        # Validate inputs
-        if not name or not email or not message:
-            return render_template("contact.html", error="All fields are required.")
-        
-        if len(message) > 250:
-            return render_template("contact.html", error="Message is too long. Please limit to 250 characters.")
+        # Your existing form processing code...
         
         try:
-            # Create messages directory if it doesn't exist
-            messages_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "messages")
+            # Create messages directory on the volume
+            messages_dir = "/app/messages"  # This is where the volume is mounted
             os.makedirs(messages_dir, exist_ok=True)
             
-            # Generate a filename with timestamp
+            # Rest of your code stays the same
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"{timestamp}_{email.replace('@', '_at_')}.json"
             
-            # Prepare the message data
             message_data = {
                 "name": name,
                 "email": email,
+                "subject": subject,
                 "message": message,
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             
-            # Save the message to a JSON file
             message_path = os.path.join(messages_dir, filename)
             with open(message_path, 'w') as f:
                 json.dump(message_data, f, indent=4)
             
-            # Return success message
-            return render_template("contact.html", success=True)
+            return redirect(url_for('routes.contact', success='true'))
             
         except Exception as e:
             print(f"Error saving contact message: {e}")
             return render_template("contact.html", error="Sorry, there was an error processing your message. Please try again later.")
     
-    # GET request - just show the form
-    return render_template("contact.html")
+    # GET request
+    success = request.args.get('success') == 'true'
+    return render_template("contact.html", success=success)
 
 
 # Generate a sitemap.xml dynamically
@@ -296,7 +282,6 @@ def sitemap():
     xml_content += '</urlset>'
     
     return xml_content, 200, {'Content-Type': 'application/xml'}
-
 
 
 # Generate robots.txt

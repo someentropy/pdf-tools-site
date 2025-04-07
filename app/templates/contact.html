@@ -1,14 +1,76 @@
-<div style="margin-bottom: 20px;">
-    <label for="email" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Your Email</label>
-    <input type="email" id="email" name="email" required style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px;" />
-  </div>
+{% extends "layout.html" %}
+
+{% block title %}Contact Us - FreePDFTools{% endblock %}
+{% block description %}Contact the FreePDFTools team with your questions and feedback about our PDF tools.{% endblock %}
+{% block keywords %}contact FreePDFTools, PDF tools support, contact form{% endblock %}
+{% block og_title %}Contact Us - FreePDFTools{% endblock %}
+{% block og_description %}Contact the FreePDFTools team with your questions and feedback about our PDF tools.{% endblock %}
+
+{% block content %}
+<section style="max-width: 600px; margin: 0 auto; padding: 20px 0;">
+  <h1 style="color: #2d3748; font-size: 1.8rem; margin-bottom: 20px;">Contact Us</h1>
   
-  <div style="margin-bottom: 20px;">
-    <label for="message" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Your Message (250 characters max)</label>
-    <textarea id="message" name="message" required maxlength="250" style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; min-height: 100px; resize: vertical;" oninput="updateCharCount(this)"></textarea>
-    <div style="text-align: right; font-size: 0.8rem; color: #718096; margin-top: 8px;">
-      <span id="charCount">0</span>/250 characters
+  <p style="color: #4a5568; margin-bottom: 24px;">Have questions or feedback about our PDF tools? We'd love to hear from you. Please fill out the form below and we'll get back to you as soon as possible.</p>
+  
+  {% if success %}
+    <div style="background-color: #c6f6d5; color: #2f855a; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+      Your message has been sent successfully. We'll get back to you soon!
     </div>
-  </div>
+  {% endif %}
   
-  <button type="submit" style="width: 100%; background-color: #3182ce; color: white; font-weight: 500; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">Send Message</button>
+  {% if error %}
+    <div style="background-color: #fed7d7; color: #c53030; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+      {{ error }}
+    </div>
+  {% endif %}
+  
+  <form id="contactForm" method="POST" action="/contact" style="background-color: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <div style="margin-bottom: 20px;">
+      <label for="name" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Your Name</label>
+      <input type="text" id="name" name="name" required style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px;" />
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label for="email" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Your Email</label>
+      <input type="email" id="email" name="email" required style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px;" />
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label for="subject" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Subject</label>
+      <select id="subject" name="subject" required style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; background-color: white;">
+        <option value="">Please select a subject</option>
+        <option value="general">General Question</option>
+        <option value="bug">Report a Bug</option>
+        <option value="feature">Feature Request</option>
+        <option value="feedback">Feedback</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label for="message" style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Your Message (250 characters max)</label>
+      <textarea id="message" name="message" required maxlength="250" style="display: block; width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; min-height: 100px; resize: vertical;" oninput="updateCharCount(this)"></textarea>
+      <div style="text-align: right; font-size: 0.8rem; color: #718096; margin-top: 8px;">
+        <span id="charCount">0</span>/250 characters
+      </div>
+    </div>
+    
+    <button type="submit" style="width: 100%; background-color: #3182ce; color: white; font-weight: 500; padding: 10px; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s;">Send Message</button>
+  </form>
+</section>
+
+<script>
+  function updateCharCount(textarea) {
+    const count = textarea.value.length;
+    document.getElementById('charCount').textContent = count;
+  }
+  
+  // Initialize character count on page load
+  window.onload = function() {
+    const messageField = document.getElementById('message');
+    if (messageField) {
+      updateCharCount(messageField);
+    }
+  }
+</script>
+{% endblock %}
