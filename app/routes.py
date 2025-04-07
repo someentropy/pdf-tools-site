@@ -1,7 +1,9 @@
+
 import subprocess
 import os
+import zipfile  # New import for PDF splitting
 from flask import Blueprint, render_template, request, send_file, current_app, redirect, url_for
-from PyPDF2 import PdfMerger
+from PyPDF2 import PdfMerger, PdfReader, PdfWriter  # Update PyPDF2 imports for splitting
 from werkzeug.utils import secure_filename
 import pikepdf
 from flask import send_from_directory
@@ -261,6 +263,8 @@ def contact():
 
 
 # Generate a sitemap.xml dynamically
+# Update this function in routes.py
+
 @app_routes.route("/sitemap.xml")
 def sitemap():
     """Generate a dynamic sitemap."""
@@ -268,6 +272,7 @@ def sitemap():
         {"loc": "/", "priority": "1.0"},
         {"loc": "/compress-pdf-online", "priority": "0.8"},
         {"loc": "/merge-pdf-files", "priority": "0.8"},
+        {"loc": "/split-pdf", "priority": "0.8"},
         {"loc": "/pdf-file-size-guide", "priority": "0.7"},
         {"loc": "/pdf-accessibility-guide", "priority": "0.7"},
         {"loc": "/about", "priority": "0.5"},
@@ -368,3 +373,54 @@ def delete_message():
         return redirect(f"/admin/messages?key={request.args.get('key')}&deleted=true")
     else:
         return "File not found", 404
+    
+
+@app_routes.route("/split-pdf", methods=["GET", "POST"])
+def split_pdf():
+    if request.method == "POST":
+        if "file" in request.files:
+            file = request.files["file"]
+            if file.filename == "":
+                return render_template("split.html", error="No file selected")
+
+            filename = secure_filename(file.filename)
+            upload_path = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(upload_path)
+
+            # Read the uploaded PDF
+            pdf_reader = PdfReader(upload_path)
+            total_pages = len(pdf_reader.pages)
+
+            return render_template("split.html", uploaded_file=filename, total_pages=total_pages)
+
+        elif "filename" in request.form:
+            filename = request.form.get("filename")
+            selected_pages = request.form.getlist("pages")
+
+            if not selected_pages:
+                return render_template("split.html", error="No pages selected")
+
+            input_path = os.path.join(UPLOAD_FOLDER, filename)
+            zip_filename = f"selected_pages_{os.path.splitext(filename)[0]}.zip"
+            zip_path = os.path.join(UPLOAD_FOLDER, zip_filename)
+
+            pdf_reader = PdfReader(input_path)
+
+            with zipfile.ZipFile(zip_path, "w") as zipf:
+                for page_num in selected_pages:
+                    page_index = int(page_num) - 1
+                    if 0 <= page_index < len(pdf_reader.pages):
+                        writer = PdfWriter()
+                        writer.add_page(pdf_reader.pages[page_index])
+
+                        page_filename = f"page_{page_num}.pdf"
+                        page_path = os.path.join(UPLOAD_FOLDER, page_filename)
+
+                        with open(page_path, "wb") as f:
+                            writer.write(f)
+                        zipf.write(page_path, arcname=page_filename)
+                        os.remove(page_path)
+
+            return render_template("split.html", success=True, download_link=f"/download?filename={zip_filename}")
+
+    return render_template("split.html")

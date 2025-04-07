@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block title %}Split PDF Files Online - Extract Pages Free | FreePDFTools{% endblock %}
+{% block description %}Split PDF files online for free. Extract specific pages or split a PDF into multiple files with our fast, secure tool. No signup required, instant download.{% endblock %}
+{% block keywords %}split PDF, extract PDF pages, divide PDF, PDF splitter, separate PDF pages{% endblock %}
+{% block og_title %}Split PDF Files Online for Free | FreePDFTools{% endblock %}
+{% block og_description %}Split PDF files and extract specific pages online for free. No signup required, fast and secure PDF splitting.{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 24px; background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <h1 style="font-size: 1.8rem; font-weight: bold; color: #3182ce; margin-bottom: 16px;">Split PDF Files Online for Free</h1>
+
+  <!-- File size limit notice -->
+  <div style="background-color: #ebf8ff; border-left: 4px solid #3182ce; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+    <p style="margin: 0; color: #2c5282; font-size: 0.9rem;">
+      <strong>Note:</strong> Maximum file size is 20 MB. For larger files, please try our desktop application.
+    </p>
+  </div>
+
+  {% if not uploaded_file and not success %}
+  <form method="POST" enctype="multipart/form-data" style="margin-top: 24px;">
+    <label style="display: block; font-size: 0.9rem; font-weight: 500; color: #4a5568; margin-bottom: 8px;">Upload a PDF file:</label>
+    <input type="file" name="file" accept="application/pdf" required style="margin-bottom: 12px;">
+    <button type="submit" style="background-color: #3182ce; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Upload PDF</button>
+  </form>
+  {% endif %}
+
+  {% if uploaded_file %}
+  <form method="POST">
+    <input type="hidden" name="filename" value="{{ uploaded_file }}">
+    <p style="margin-bottom: 12px; color: #2d3748; font-weight: 500;">Select pages to extract:</p>
+  
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 16px;">
+      {% for page_num in range(1, total_pages + 1) %}
+      <label style="display: flex; align-items: center; font-size: 0.9rem; color: #2d3748;">
+        <input type="checkbox" name="pages" value="{{ page_num }}" style="margin-right: 6px;">
+        {{ page_num }}
+      </label>
+      {% endfor %}
+    </div>
+  
+    <label style="display: inline-block; margin-bottom: 16px; font-size: 0.9rem; color: #2d3748;">
+      <input type="checkbox" onclick="toggleAll(this)" style="margin-right: 6px;"> Select All
+    </label>
+  
+    <br>
+    <button type="submit" style="background-color: #3182ce; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Extract Selected Pages</button>
+  </form>
+  
+  <script>
+    function toggleAll(source) {
+      const checkboxes = document.querySelectorAll('input[name="pages"]');
+      for (const box of checkboxes) {
+        box.checked = source.checked;
+      }
+    }
+  </script>
+  
+  {% endif %}
+
+  {% if error %}
+  <div style="margin-top: 20px; padding: 12px; background-color: #fff5f5; color: #c53030; border-left: 4px solid #e53e3e; border-radius: 4px;">
+    {{ error }}
+  </div>
+  {% endif %}
+
+  {% if success %}
+  <div style="margin-top: 20px; padding: 12px; background-color: #c6f6d5; color: #2f855a; border-left: 4px solid #38a169; border-radius: 4px;">
+    PDF split successful. <a href="{{ download_link }}">Download your file</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
