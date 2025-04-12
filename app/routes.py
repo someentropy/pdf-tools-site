@@ -29,22 +29,10 @@ def redirect_www_and_root_domains():
     if "googlebot" in user_agent or "adsense" in user_agent:
         return  # allow crawlers
     
-    # For all users including bots, ensure canonical consistency
-    if host == "carbonpdf.com" or host == "www.carbonpdf.com":
-        return redirect("https://freepdftools.carbonprojects.dev" + request.full_path, code=301)
-    
-    # Redirect www → root domain
+    # Remove handling for carbonprojects.dev
     if host == "www.carbonprojects.dev":
         new_url = request.url.replace("://www.", "://", 1)
         return redirect(new_url, code=301)
-
-    # Let "/" and "/ads.txt" on root domain serve locally
-    if host == "carbonprojects.dev" and path in ["/", "/ads.txt"]:
-        return  # allow Flask to handle it normally
-
-    # Redirect everything else from root domain
-    if host == "carbonprojects.dev":
-        return redirect("https://freepdftools.carbonprojects.dev" + request.full_path, code=301)
 
 
 @app_routes.route("/", methods=["GET"])
