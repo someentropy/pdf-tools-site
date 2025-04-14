@@ -314,7 +314,6 @@ def sitemap():
     for page in pages:
         xml_content += '  <url>\n'
         xml_content += f'    <loc>{base_url}{page["loc"]}</loc>\n'
-        xml_content += '    <lastmod>2025-04-01</lastmod>\n'
         xml_content += '    <changefreq>monthly</changefreq>\n'
         xml_content += f'    <priority>{page["priority"]}</priority>\n'
         xml_content += '  </url>\n'
@@ -332,6 +331,7 @@ def robots():
 Allow: /
 Disallow: /admin/
 Disallow: /internal/
+Disallow: /download
 
 Sitemap: https://freepdftools.carbonprojects.dev/sitemap.xml
 """, 200, {'Content-Type': 'text/plain'}
